@@ -62,7 +62,7 @@ score<6 — проще, score>=6 — сложнее, score=10 — challenge. Н�
 
   if (loading) {
     return (
-      <div className="max-w-lg mx-auto py-16 px-4 space-y-6">
+      <div className="space-y-8">
         <AILoader />
         <p className="text-center text-[#632895] text-sm font-medium">ALGO готовит следующее задание...</p>
       </div>
@@ -70,7 +70,7 @@ score<6 — проще, score>=6 — сложнее, score=10 — challenge. Н�
   }
 
   return (
-    <div className="max-w-2xl w-full mx-auto py-10 px-4 space-y-6 animate-fade-in">
+    <div className="space-y-8 animate-fade-in">
       {/* Score */}
       <div className="bg-[#632895] rounded-[28px] p-8 text-center shadow-[0_8px_32px_rgba(99,40,149,0.3)]">
         <div className="text-3xl mb-3">{stars}</div>

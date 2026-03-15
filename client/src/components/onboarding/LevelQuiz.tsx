@@ -94,7 +94,7 @@ export function LevelQuiz() {
 
   if (finished) {
     return (
-      <div className="max-w-lg w-full mx-auto py-16 px-4 space-y-8 animate-fade-in">
+      <div className="space-y-10 animate-fade-in">
         <div className="text-center">
           <div className="w-24 h-24 mx-auto rounded-[24px] bg-[#ffd84d] flex items-center justify-center text-5xl shadow-[0_8px_24px_rgba(255,216,77,0.4)] mb-6">
             🎯
@@ -117,7 +117,7 @@ export function LevelQuiz() {
   }
 
   return (
-    <div className="max-w-xl w-full mx-auto py-10 px-4 animate-fade-in">
+    <div className="animate-fade-in">
       {/* Progress */}
       <div className="flex gap-2 mb-10">
         {QUIZ_QUESTIONS.map((_, i) => (

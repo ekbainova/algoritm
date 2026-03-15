@@ -20,11 +20,7 @@ export function WelcomeScreen() {
   }, []);
 
   return (
-    <div className="flex flex-col items-center justify-center min-h-[85vh] gap-10 px-4 animate-fade-in w-full relative overflow-hidden">
-      {/* Decorative blobs */}
-      <div className="absolute top-10 right-[-100px] w-[300px] h-[300px] bg-[#ffd84d] rounded-full opacity-20 blur-3xl" />
-      <div className="absolute bottom-10 left-[-100px] w-[250px] h-[250px] bg-[#632895] rounded-full opacity-20 blur-3xl" />
-
+    <div className="flex flex-col items-center justify-center gap-12 animate-fade-in">
       {/* Avatar */}
       <div className="animate-float">
         <div className="w-36 h-36 rounded-[32px] bg-gradient-to-br from-[#632895] to-[#3d1560] flex items-center justify-center text-7xl shadow-[0_12px_40px_rgba(99,40,149,0.4)] border-4 border-[#ffd84d]/30">
@@ -37,7 +33,7 @@ export function WelcomeScreen() {
         <p className="text-[#632895] text-xl font-semibold">Твой учитель Python</p>
       </div>
 
-      <div className="max-w-lg w-full">
+      <div className="w-full">
         {loading ? <AILoader /> : <AIMessage text={greeting} />}
       </div>
 

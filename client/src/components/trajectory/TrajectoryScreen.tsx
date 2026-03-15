@@ -73,7 +73,7 @@ export function TrajectoryScreen() {
 
   if (loading) {
     return (
-      <div className="max-w-lg w-full mx-auto py-16 px-4 space-y-6">
+      <div className="space-y-8">
         <AILoader />
         <p className="text-center text-[#632895] text-sm font-medium">ALGO составляет твою траекторию...</p>
       </div>
@@ -81,7 +81,7 @@ export function TrajectoryScreen() {
   }
 
   return (
-    <div className="max-w-xl w-full mx-auto py-10 px-4 space-y-8 animate-fade-in">
+    <div className="space-y-10 animate-fade-in">
       {data && <AIMessage text={data.personalMessage} />}
 
       <h2 className="text-2xl font-extrabold text-center text-[#3d1560] mt-6">Твоя траектория</h2>
