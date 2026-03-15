@@ -1,0 +1,57 @@
+@import "tailwindcss";
+
+:root {
+  --color-bg: #f8f5fb;
+  --color-surface: #FFFFFF;
+  --color-primary: #0f1c2c;
+  --color-purple: #632895;
+  --color-purple-dark: #3d1560;
+  --color-purple-light: #ede5f3;
+  --color-yellow: #ffd84d;
+  --color-yellow-hover: #ffc800;
+  --color-green: #44d370;
+  --color-error: #EF4444;
+  --color-warning: #F59E0B;
+  --color-text-muted: #6B7280;
+  --color-border: #E5E7EB;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Montserrat', sans-serif;
+  background: var(--color-bg);
+  color: var(--color-primary);
+  min-height: 100vh;
+}
+
+code, pre, .font-mono {
+  font-family: 'JetBrains Mono', monospace;
+}
+
+@keyframes fadeSlideIn {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.animate-fade-in {
+  animation: fadeSlideIn 0.5s ease forwards;
+}
+
+@keyframes pulse-dot {
+  0%, 80%, 100% { transform: scale(0.6); opacity: 0.4; }
+  40% { transform: scale(1); opacity: 1; }
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-8px); }
+}
+
+.animate-float {
+  animation: float 3s ease-in-out infinite;
+}
