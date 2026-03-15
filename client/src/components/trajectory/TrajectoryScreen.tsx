@@ -73,10 +73,7 @@ export function TrajectoryScreen() {
 
   if (loading) {
     return (
-      <div className="space-y-8">
-        <AILoader />
-        <p className="text-center text-[#632895] text-sm font-medium">ALGO составляет твою траекторию...</p>
-      </div>
+      <AILoader message="ALGO составляет твою траекторию..." />
     );
   }
 

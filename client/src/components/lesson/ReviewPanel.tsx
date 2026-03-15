@@ -62,10 +62,7 @@ score<6 — проще, score>=6 — сложнее, score=10 — challenge. Н�
 
   if (loading) {
     return (
-      <div className="space-y-8">
-        <AILoader />
-        <p className="text-center text-[#632895] text-sm font-medium">ALGO готовит следующее задание...</p>
-      </div>
+      <AILoader message="ALGO готовит следующее задание..." />
     );
   }
 

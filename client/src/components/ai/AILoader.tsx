@@ -1,4 +1,8 @@
-export function AILoader() {
+interface AILoaderProps {
+  message?: string;
+}
+
+export function AILoader({ message = 'ALGO думает...' }: AILoaderProps) {
   return (
     <div className="flex gap-4 items-start">
       <div className="flex-shrink-0 w-11 h-11 rounded-2xl bg-[#ffd84d] flex items-center justify-center text-lg shadow-[0_4px_12px_rgba(255,216,77,0.3)]">
@@ -18,7 +22,7 @@ export function AILoader() {
               />
             ))}
           </div>
-          <span className="text-sm font-medium text-white/80">ALGO думает...</span>
+          <span className="text-sm font-medium text-white/80">{message}</span>
         </div>
       </div>
     </div>

@@ -22,6 +22,8 @@ const HOURS = [
 
 type Experience = 'none' | 'some' | 'confident';
 
+const INPUT_CLASS = 'w-full px-6 pt-5 pb-5 rounded-2xl border-2 border-white/20 bg-white text-[#3d1560] placeholder-[#999] focus:border-[#ffd84d] focus:outline-none transition-colors text-base font-medium';
+
 export function ProfileForm() {
   const { setStudent, setPhase } = useStudentStore();
   const [name, setName] = useState('');
@@ -31,13 +33,15 @@ export function ProfileForm() {
   const [goal, setGoal] = useState<StudentGoal | null>(null);
   const [hours, setHours] = useState<number | null>(null);
 
-  const canSubmit = name.trim() && age && goal && hours && experience;
+  const parsedAge = parseInt(age);
+  const validAge = !isNaN(parsedAge) && parsedAge >= 6 && parsedAge <= 18;
+  const canSubmit = name.trim() && validAge && goal && hours && experience;
 
   const handleSubmit = () => {
     if (!canSubmit || !goal || !hours || !experience) return;
     setStudent({
       name: name.trim(),
-      age: parseInt(age),
+      age: parsedAge,
       pythonExperience: experience,
       experienceDuration: experienceDuration || undefined,
       goal,
@@ -65,7 +69,7 @@ export function ProfileForm() {
               placeholder="Как тебя зовут?"
               value={name}
               onChange={(e) => setName(e.target.value)}
-              className="w-full px-6 pt-5 pb-5 rounded-2xl border-2 border-white/20 bg-white text-[#3d1560] placeholder-[#999] focus:border-[#ffd84d] focus:outline-none transition-colors text-base font-medium"
+              className={INPUT_CLASS}
             />
           </div>
           <div>
@@ -77,7 +81,7 @@ export function ProfileForm() {
               onChange={(e) => setAge(e.target.value)}
               min={6}
               max={18}
-              className="w-full px-6 pt-5 pb-5 rounded-2xl border-2 border-white/20 bg-white text-[#3d1560] placeholder-[#999] focus:border-[#ffd84d] focus:outline-none transition-colors text-base font-medium"
+              className={INPUT_CLASS}
             />
           </div>
         </div>
@@ -112,7 +116,7 @@ export function ProfileForm() {
                 placeholder="Как давно? (напр. полгода)"
                 value={experienceDuration}
                 onChange={(e) => setExperienceDuration(e.target.value)}
-                className="w-full px-6 pt-5 pb-5 rounded-2xl border-2 border-white/20 bg-white text-[#3d1560] placeholder-[#999] focus:border-[#ffd84d] focus:outline-none transition-colors text-base font-medium"
+                className={INPUT_CLASS}
               />
             </div>
           )}

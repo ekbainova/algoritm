@@ -11,6 +11,17 @@ import { askClaudeJSON } from '../../api/claude';
 import { GOAL_LABELS } from '../../types';
 import type { Task, CodeReview } from '../../types';
 
+const EDITOR_OPTIONS = {
+  fontSize: 14,
+  fontFamily: "'JetBrains Mono', monospace",
+  minimap: { enabled: false },
+  lineNumbers: 'on' as const,
+  automaticLayout: true,
+  padding: { top: 16 },
+  scrollBeyondLastLine: false,
+  roundedSelection: true,
+};
+
 export function LessonScreen() {
   const { student, currentTask, currentCode, setCurrentCode, setCurrentTask, submitReview, trajectory } = useStudentStore();
   const { runCode, isLoading: pyodideLoading } = usePyodide();
@@ -114,9 +125,8 @@ JSON (без markdown-блоков):
 
   if (generating) {
     return (
-      <div className="max-w-lg mx-auto py-16 px-4 space-y-6">
-        <AILoader />
-        <p className="text-center text-[#632895] text-sm font-medium">ALGO готовит задание...</p>
+      <div className="max-w-lg mx-auto py-16 px-4">
+        <AILoader message="ALGO готовит задание..." />
       </div>
     );
   }
@@ -138,17 +148,8 @@ JSON (без markdown-блоков):
             language="python"
             theme="vs"
             value={currentCode}
-            onChange={(val) => setCurrentCode(val || '')}
-            options={{
-              fontSize: 14,
-              fontFamily: "'JetBrains Mono', monospace",
-              minimap: { enabled: false },
-              lineNumbers: 'on',
-              automaticLayout: true,
-              padding: { top: 16 },
-              scrollBeyondLastLine: false,
-              roundedSelection: true,
-            }}
+            onChange={useCallback((val?: string) => setCurrentCode(val || ''), [setCurrentCode])}
+            options={EDITOR_OPTIONS}
           />
         </div>
 
@@ -156,10 +157,9 @@ JSON (без markdown-блоков):
         <div className="flex gap-3 p-4 bg-[#f8f5fb] border-t border-[#632895]/10">
           <Button
             onClick={handleRun}
-            variant="secondary"
+            variant="dark"
             disabled={pyodideLoading}
             size="sm"
-            className="!bg-[#632895] !text-white !border-none hover:!bg-[#4a1a70]"
           >
             <Play size={16} />
             {pyodideLoading ? 'Python загружается...' : 'Запустить'}
