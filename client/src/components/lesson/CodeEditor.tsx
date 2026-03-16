@@ -76,13 +76,12 @@ export function LessonScreen() {
           <div style={{ width: 12, height: 12, borderRadius: '50%', background: '#ff5f57' }} />
           <div style={{ width: 12, height: 12, borderRadius: '50%', background: '#febc2e' }} />
           <div style={{ width: 12, height: 12, borderRadius: '50%', background: '#28c840' }} />
-          <span style={{ marginLeft: 24, padding: '4px 16px', borderRadius: 6, background: 'rgba(255,255,255,0.06)', fontSize: 12, color: 'var(--text-muted)', fontFamily: "'JetBrains Mono', monospace" }}>algoai.duckdns.org</span>
         </div>
 
         {/* Content */}
         <div style={{ display: 'flex', flex: 1, minHeight: 0 }}>
           {/* Left — Task */}
-          <div style={{ width: '40%', padding: 32, overflowY: 'auto', background: 'linear-gradient(180deg, var(--purple) 0%, var(--purple-dark) 100%)' }}>
+          <div style={{ width: '40%', padding: 32, overflowY: 'auto', overflowX: 'hidden', background: 'linear-gradient(180deg, var(--purple) 0%, var(--purple-dark) 100%)', wordBreak: 'break-word' }}>
             <TaskCard task={currentTask} />
           </div>
 
@@ -90,7 +89,7 @@ export function LessonScreen() {
           <div style={{ width: '60%', display: 'flex', flexDirection: 'column' }}>
             <div style={{ flex: 1, minHeight: 0 }}>
               <Editor height="100%" language="python" theme="vs-dark" value={currentCode}
-                onChange={useCallback((val?: string) => setCurrentCode(val || ''), [setCurrentCode])}
+                onChange={(val?: string) => setCurrentCode(val || '')}
                 options={EDITOR_OPTIONS} />
             </div>
 

@@ -30,7 +30,7 @@ export function TaskCard({ task }: TaskCardProps) {
       {task.exampleOutput && (
         <div>
           <div style={{ fontSize: 11, fontWeight: 700, color: '#ffd84d', marginBottom: 8, textTransform: 'uppercase', letterSpacing: 2 }}>Пример вывода</div>
-          <pre style={{ background: 'rgba(255,255,255,0.06)', padding: 16, borderRadius: 16, fontSize: 13, lineHeight: 1.6, color: 'var(--green)', border: '1px solid rgba(255,255,255,0.05)' }}>{task.exampleOutput}</pre>
+          <pre style={{ background: 'rgba(255,255,255,0.06)', padding: 16, borderRadius: 16, fontSize: 13, lineHeight: 1.6, color: 'var(--green)', border: '1px solid rgba(255,255,255,0.05)', whiteSpace: 'pre-wrap', wordBreak: 'break-word' }}>{task.exampleOutput}</pre>
         </div>
       )}
 
