@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, type CSSProperties } from 'react';
 import { Card } from '../shared/Card';
 import { Button } from '../shared/Button';
 import { useStudentStore } from '../../store/studentStore';
@@ -22,7 +22,24 @@ const HOURS = [
 
 type Experience = 'none' | 'some' | 'confident';
 
-const INPUT_CLASS = 'w-full px-6 pt-5 pb-5 rounded-2xl border-2 border-white/20 bg-white text-[#3d1560] placeholder-[#999] focus:border-[#ffd84d] focus:outline-none transition-colors text-base font-medium';
+const inputStyle: CSSProperties = {
+  width: '100%', padding: '16px 24px', borderRadius: 16,
+  border: '1px solid rgba(99,40,149,0.15)', background: 'white',
+  color: 'var(--text)', fontSize: 15, fontWeight: 500,
+  fontFamily: 'inherit', outline: 'none',
+};
+
+const labelStyle: CSSProperties = {
+  display: 'block', fontSize: 11, fontWeight: 700, marginBottom: 16,
+  color: 'var(--purple)', textTransform: 'uppercase', letterSpacing: 3,
+};
+
+const labelOnPurple: CSSProperties = {
+  ...labelStyle,
+  color: '#ffd84d',
+};
+
+const sectionGap = 40;
 
 export function ProfileForm() {
   const { setStudent, setPhase } = useStudentStore();
@@ -39,108 +56,64 @@ export function ProfileForm() {
 
   const handleSubmit = () => {
     if (!canSubmit || !goal || !hours || !experience) return;
-    setStudent({
-      name: name.trim(),
-      age: parsedAge,
-      pythonExperience: experience,
-      experienceDuration: experienceDuration || undefined,
-      goal,
-      weeklyHours: hours,
-      quizScore: 0,
-      level: 'beginner',
-    });
+    setStudent({ name: name.trim(), age: parsedAge, pythonExperience: experience, experienceDuration: experienceDuration || undefined, goal, weeklyHours: hours, quizScore: 0, level: 'beginner' });
     setPhase('quiz');
   };
 
   return (
-    <div className="space-y-10 animate-fade-in">
-      <div className="text-center">
-        <h2 className="text-3xl font-extrabold text-[#3d1560]">Расскажи о себе</h2>
-        <p className="text-[#632895] mt-3 text-lg font-medium">Чтобы ALGO построил твою персональную траекторию</p>
+    <div style={{ display: 'flex', flexDirection: 'column', gap: sectionGap, animation: 'fadeUp 0.6s ease forwards' }}>
+      <div style={{ textAlign: 'center' }}>
+        <h2 style={{ fontSize: 28, fontWeight: 900, background: 'linear-gradient(135deg, var(--purple-dark), var(--purple))', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>Расскажи о себе</h2>
+        <p style={{ color: 'var(--text-muted)', marginTop: 12, fontSize: 16, fontWeight: 500 }}>Чтобы ALGO построила твою персональную траекторию</p>
       </div>
 
-      {/* Name & Age */}
-      <div className="bg-[#632895] rounded-[28px] p-8 shadow-[0_8px_32px_rgba(99,40,149,0.3)]">
-        <div className="grid grid-cols-2 gap-6">
+      <div style={{ borderRadius: 28, padding: 32, background: 'linear-gradient(135deg, var(--purple), var(--purple-dark))', boxShadow: '0 8px 40px rgba(99,40,149,0.3)' }}>
+        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 24 }}>
           <div>
-            <label className="block text-sm font-semibold mb-4 text-[#ffd84d]">Имя</label>
-            <input
-              type="text"
-              placeholder="Как тебя зовут?"
-              value={name}
-              onChange={(e) => setName(e.target.value)}
-              className={INPUT_CLASS}
-            />
+            <label style={labelOnPurple}>Имя</label>
+            <input style={inputStyle} type="text" placeholder="Как тебя зовут?" value={name} onChange={(e) => setName(e.target.value)} />
           </div>
           <div>
-            <label className="block text-sm font-semibold mb-4 text-[#ffd84d]">Возраст</label>
-            <input
-              type="number"
-              placeholder="Сколько тебе лет?"
-              value={age}
-              onChange={(e) => setAge(e.target.value)}
-              min={6}
-              max={18}
-              className={INPUT_CLASS}
-            />
+            <label style={labelOnPurple}>Возраст</label>
+            <input style={inputStyle} type="number" placeholder="Сколько тебе лет?" value={age} onChange={(e) => setAge(e.target.value)} min={6} max={18} />
           </div>
         </div>
       </div>
 
-      {/* Experience */}
       {name && age && (
-        <div className="animate-fade-in">
-          <label className="block text-sm font-bold mb-5 text-[#3d1560] uppercase tracking-wider">Опыт с Python</label>
-          <div className="grid grid-cols-3 gap-4">
+        <div style={{ animation: 'fadeUp 0.5s ease forwards' }}>
+          <label style={labelStyle}>Опыт с Python</label>
+          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: 16 }}>
             {([
               { value: 'none' as Experience, emoji: '🌱', label: 'Никогда не пробовал' },
               { value: 'some' as Experience, emoji: '📖', label: 'Чуть-чуть знаю' },
               { value: 'confident' as Experience, emoji: '💪', label: 'Уже умею' },
             ]).map((opt) => (
-              <Card
-                key={opt.value}
-                dark
-                selected={experience === opt.value}
-                onClick={() => setExperience(opt.value)}
-                className="p-6 text-center"
-              >
-                <div className="text-3xl mb-3">{opt.emoji}</div>
-                <div className="text-sm font-semibold">{opt.label}</div>
+              <Card key={opt.value} selected={experience === opt.value} onClick={() => setExperience(opt.value)} style={{ padding: 24, textAlign: 'center' }}>
+                <div style={{ fontSize: 32, marginBottom: 8 }}>{opt.emoji}</div>
+                <div style={{ fontSize: 13, fontWeight: 600 }}>{opt.label}</div>
               </Card>
             ))}
           </div>
           {experience && experience !== 'none' && (
-            <div className="bg-[#632895] rounded-2xl p-6 mt-5">
-              <input
-                type="text"
-                placeholder="Как давно? (напр. полгода)"
-                value={experienceDuration}
-                onChange={(e) => setExperienceDuration(e.target.value)}
-                className={INPUT_CLASS}
-              />
+            <div style={{ marginTop: 20, borderRadius: 20, padding: 24, background: 'linear-gradient(135deg, var(--purple), var(--purple-dark))' }}>
+              <input style={inputStyle} type="text" placeholder="Как давно? (напр. полгода)" value={experienceDuration} onChange={(e) => setExperienceDuration(e.target.value)} />
             </div>
           )}
         </div>
       )}
 
-      {/* Goals */}
       {experience && (
-        <div className="animate-fade-in">
-          <label className="block text-sm font-bold mb-5 text-[#3d1560] uppercase tracking-wider">Твоя цель</label>
-          <div className="grid grid-cols-2 gap-4">
+        <div style={{ animation: 'fadeUp 0.5s ease forwards' }}>
+          <label style={labelStyle}>Твоя цель</label>
+          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16 }}>
             {GOALS.map((g) => (
-              <Card
-                key={g.value}
-                dark
-                selected={goal === g.value}
-                onClick={() => setGoal(g.value)}
-                className="p-6"
-              >
-                <div className="flex items-start gap-4">
-                  <span className="text-3xl">{g.emoji}</span>
-                  <div className="text-left">
-                    <div className="font-bold text-sm">{g.title}</div>
-                    <div className="text-xs text-white/60 mt-1">{g.desc}</div>
+              <Card key={g.value} selected={goal === g.value} onClick={() => setGoal(g.value)} style={{ padding: 24 }}>
+                <div style={{ display: 'flex', alignItems: 'flex-start', gap: 16 }}>
+                  <span style={{ fontSize: 32 }}>{g.emoji}</span>
+                  <div>
+                    <div style={{ fontWeight: 700, fontSize: 14 }}>{g.title}</div>
+                    <div style={{ fontSize: 12, color: 'var(--text-muted)', marginTop: 4 }}>{g.desc}</div>
                   </div>
                 </div>
               </Card>
@@ -149,32 +122,22 @@ export function ProfileForm() {
         </div>
       )}
 
-      {/* Hours */}
       {goal && (
-        <div className="animate-fade-in">
-          <label className="block text-sm font-bold mb-5 text-[#3d1560] uppercase tracking-wider">Время в неделю</label>
-          <div className="flex gap-4">
+        <div style={{ animation: 'fadeUp 0.5s ease forwards' }}>
+          <label style={labelStyle}>Время в неделю</label>
+          <div style={{ display: 'flex', gap: 16 }}>
             {HOURS.map((h) => (
-              <Card
-                key={h.value}
-                dark
-                selected={hours === h.value}
-                onClick={() => setHours(h.value)}
-                className="flex-1 p-5 text-center"
-              >
-                <div className="text-sm font-bold">{h.label}</div>
+              <Card key={h.value} selected={hours === h.value} onClick={() => setHours(h.value)} style={{ flex: 1, padding: 20, textAlign: 'center' }}>
+                <div style={{ fontSize: 13, fontWeight: 700 }}>{h.label}</div>
               </Card>
             ))}
           </div>
         </div>
       )}
 
-      {/* Submit */}
       {canSubmit && (
-        <div className="text-center animate-fade-in pt-4">
-          <Button size="lg" onClick={handleSubmit}>
-            Готово! Погнали &rarr;
-          </Button>
+        <div style={{ textAlign: 'center', animation: 'fadeUp 0.5s ease forwards', paddingTop: 16 }}>
+          <Button size="lg" onClick={handleSubmit}>Готово! Погнали →</Button>
         </div>
       )}
     </div>

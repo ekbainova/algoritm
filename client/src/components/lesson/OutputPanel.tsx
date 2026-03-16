@@ -1,20 +1,20 @@
 import { friendlyError } from '../../utils/pythonErrors';
 
-interface OutputPanelProps {
-  output: string;
-  error: string | null;
-}
+interface OutputPanelProps { output: string; error: string | null; }
 
 export function OutputPanel({ output, error }: OutputPanelProps) {
   return (
-    <div className="bg-[#1a1a2e] rounded-2xl p-5 font-mono text-sm min-h-[100px]">
-      <div className="text-[#ffd84d] text-xs mb-3 font-sans font-bold uppercase tracking-wider">Output</div>
+    <div style={{ minHeight: 40, fontFamily: "'JetBrains Mono', monospace", fontSize: 13 }}>
       {error ? (
-        <div className="text-[#EF4444]">{friendlyError(error)}</div>
+        <div style={{ color: 'var(--red)' }}>{friendlyError(error)}</div>
       ) : output ? (
-        <pre className="text-[#44d370] whitespace-pre-wrap">{output}</pre>
+        <pre style={{ whiteSpace: 'pre-wrap', color: '#cdd6f4' }}>
+          {output.split('\n').map((line, i) => (
+            <div key={i}><span style={{ color: 'var(--green)' }}>→</span> {line}</div>
+          ))}
+        </pre>
       ) : (
-        <div className="text-white/30 italic">Запусти код, чтобы увидеть результат</div>
+        <div style={{ color: 'rgba(168,156,184,0.3)', fontStyle: 'italic', fontSize: 13 }}>Запусти код, чтобы увидеть результат</div>
       )}
     </div>
   );

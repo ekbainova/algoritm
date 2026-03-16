@@ -10,14 +10,20 @@ export function AIMessage({ text, animate = true }: AIMessageProps) {
   const shown = animate ? displayed : text;
 
   return (
-    <div className="flex gap-4 animate-fade-in items-start">
-      <div className="flex-shrink-0 w-11 h-11 rounded-2xl bg-[#ffd84d] flex items-center justify-center text-lg shadow-[0_4px_12px_rgba(255,216,77,0.3)]">
-        🤖
-      </div>
-      <div className="flex-1 min-w-0 rounded-[20px] bg-[#3d1560] text-white border-l-4 border-[#ffd84d] overflow-hidden">
-        <div className="pl-8 pr-6 py-5 text-[15px] leading-[1.8] whitespace-pre-wrap">
-          {shown}
-        </div>
+    <div style={{ animation: 'fadeUp 0.6s ease forwards' }}>
+      <div style={{
+        maxWidth: '80%',
+        padding: '16px 20px',
+        borderRadius: '20px',
+        borderBottomLeftRadius: 4,
+        background: 'linear-gradient(135deg, var(--purple), var(--purple-dark))',
+        borderLeft: '3px solid var(--yellow)',
+        color: 'white',
+        fontSize: 14,
+        lineHeight: 1.6,
+        marginBottom: 12,
+      }}>
+        {shown}
       </div>
     </div>
   );

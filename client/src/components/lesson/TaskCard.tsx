@@ -1,15 +1,12 @@
 import { useState } from 'react';
 import { Badge } from '../shared/Badge';
-import { Lightbulb } from 'lucide-react';
 import type { Task } from '../../types';
 
-interface TaskCardProps {
-  task: Task;
-}
+interface TaskCardProps { task: Task; }
 
 const DIFFICULTY_MAP = {
   easy: { label: 'Лёгкое', color: 'green' as const },
-  medium: { label: 'Среднее', color: 'yellow' as const },
+  medium: { label: 'Среднее', color: 'light' as const },
   hard: { label: 'Сложное', color: 'red' as const },
 };
 
@@ -18,40 +15,32 @@ export function TaskCard({ task }: TaskCardProps) {
   const diff = DIFFICULTY_MAP[task.difficulty];
 
   return (
-    <div className="bg-white/10 backdrop-blur-sm rounded-[24px] p-7 h-full flex flex-col text-white">
-      <div className="flex items-center gap-2 mb-4 flex-wrap">
-        <Badge color={diff.color}>{diff.label}</Badge>
-        {task.conceptsTaught.map((c) => (
-          <Badge key={c} color="purple">{c}</Badge>
-        ))}
+    <div style={{ display: 'flex', flexDirection: 'column', gap: 20, color: 'white' }}>
+      <div style={{ fontSize: 11, textTransform: 'uppercase', letterSpacing: 2, color: 'rgba(255,255,255,0.5)', fontWeight: 600 }}>
+        Модуль 1 · Задание
       </div>
+      <div style={{ fontSize: 22, fontWeight: 800 }}>{task.title}</div>
+      <div style={{ fontSize: 14, color: 'rgba(255,255,255,0.75)', lineHeight: 1.7 }}>{task.description}</div>
 
-      <h3 className="text-xl font-bold mb-4">{task.title}</h3>
-
-      <div className="text-sm leading-relaxed whitespace-pre-wrap flex-1 text-white/90">
-        {task.description}
+      <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
+        <Badge color={diff.color}>{diff.label}</Badge>
+        {task.conceptsTaught.map((c) => <Badge key={c} color="light">{c}</Badge>)}
       </div>
 
       {task.exampleOutput && (
-        <div className="mt-5">
-          <div className="text-xs font-bold text-[#ffd84d] mb-2 uppercase tracking-wider">Пример вывода</div>
-          <pre className="bg-white/10 p-4 rounded-2xl text-sm font-mono text-white leading-relaxed">
-            {task.exampleOutput}
-          </pre>
+        <div>
+          <div style={{ fontSize: 11, fontWeight: 700, color: '#ffd84d', marginBottom: 8, textTransform: 'uppercase', letterSpacing: 2 }}>Пример вывода</div>
+          <pre style={{ background: 'rgba(255,255,255,0.06)', padding: 16, borderRadius: 16, fontSize: 13, lineHeight: 1.6, color: 'var(--green)', border: '1px solid rgba(255,255,255,0.05)' }}>{task.exampleOutput}</pre>
         </div>
       )}
 
       {task.hint && (
-        <div className="mt-5">
-          <button
-            onClick={() => setShowHint(!showHint)}
-            className="flex items-center gap-2 text-sm font-bold text-[#ffd84d] hover:text-[#ffe680] transition-colors cursor-pointer"
-          >
-            <Lightbulb size={16} />
-            {showHint ? 'Скрыть подсказку' : 'Подсказка'}
+        <div>
+          <button onClick={() => setShowHint(!showHint)} style={{ background: 'none', border: 'none', cursor: 'pointer', fontSize: 13, fontWeight: 700, color: '#ffd84d', fontFamily: 'inherit' }}>
+            {showHint ? '▾ Скрыть подсказку' : '▸ Подсказка'}
           </button>
           {showHint && (
-            <div className="mt-3 p-4 rounded-2xl bg-[#ffd84d] text-[#3d1560] text-sm font-semibold animate-fade-in">
+            <div style={{ marginTop: 12, padding: 16, borderRadius: 16, background: 'rgba(255,216,77,0.1)', border: '1px solid rgba(255,216,77,0.2)', color: '#ffd84d', fontSize: 13, fontWeight: 600, animation: 'fadeUp 0.3s ease forwards' }}>
               {task.hint}
             </div>
           )}

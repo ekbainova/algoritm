@@ -20,25 +20,36 @@ export function WelcomeScreen() {
   }, []);
 
   return (
-    <div className="flex flex-col items-center justify-center gap-12 animate-fade-in">
+    <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: 48, animation: 'fadeUp 0.8s ease forwards' }}>
       {/* Avatar */}
-      <div className="animate-float">
-        <div className="w-36 h-36 rounded-[32px] bg-gradient-to-br from-[#632895] to-[#3d1560] flex items-center justify-center text-7xl shadow-[0_12px_40px_rgba(99,40,149,0.4)] border-4 border-[#ffd84d]/30">
+      <div style={{ animation: 'float 3s ease-in-out infinite' }}>
+        <div style={{
+          width: 144, height: 144, borderRadius: 32,
+          background: 'linear-gradient(135deg, var(--purple), var(--purple-dark))',
+          display: 'flex', alignItems: 'center', justifyContent: 'center',
+          fontSize: 72,
+          boxShadow: '0 12px 60px rgba(99,40,149,0.4)',
+          border: '1px solid rgba(99,40,149,0.3)',
+        }}>
           🤖
         </div>
       </div>
 
-      <div className="text-center">
-        <h1 className="text-5xl font-extrabold mb-3 text-[#3d1560]">ALGO</h1>
-        <p className="text-[#632895] text-xl font-semibold">Твой учитель Python</p>
+      <div style={{ textAlign: 'center' }}>
+        <h1 style={{
+          fontSize: 48, fontWeight: 900, marginBottom: 12,
+          background: 'linear-gradient(135deg, var(--purple-dark) 0%, var(--purple) 50%, var(--yellow) 100%)',
+          WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent',
+        }}>ALGO</h1>
+        <p style={{ color: 'var(--text-muted)', fontSize: 20, fontWeight: 600 }}>Твой учитель Python</p>
       </div>
 
-      <div className="w-full">
+      <div style={{ width: '100%' }}>
         {loading ? <AILoader /> : <AIMessage text={greeting} />}
       </div>
 
       <Button size="lg" onClick={() => setPhase('profile')} disabled={loading}>
-        Привет, ALGO! &rarr;
+        Привет, ALGO! →
       </Button>
     </div>
   );

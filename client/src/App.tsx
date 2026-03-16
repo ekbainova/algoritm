@@ -13,11 +13,15 @@ function App() {
   const isLesson = phase === 'lesson';
 
   return (
-    <div className="min-h-screen bg-[#f8f5fb] flex flex-col">
+    <div style={{ minHeight: '100vh', background: 'var(--bg)', display: 'flex', flexDirection: 'column', position: 'relative' }}>
+      {/* Background glow */}
+      <div style={{ position: 'fixed', inset: 0, pointerEvents: 'none', overflow: 'hidden' }}>
+        <div style={{ position: 'absolute', top: -300, left: '50%', transform: 'translateX(-50%)', width: 800, height: 800, borderRadius: '50%', background: 'radial-gradient(circle, rgba(99,40,149,0.06) 0%, transparent 70%)' }} />
+      </div>
       <Header />
       <ProgressBar />
-      <main className={isLesson ? 'flex-1' : 'flex-1 flex justify-center'}>
-        <div className={isLesson ? 'h-full' : 'w-full max-w-[560px] px-6 py-8'}>
+      <main style={isLesson ? { flex: 1, position: 'relative', zIndex: 10 } : { flex: 1, display: 'flex', justifyContent: 'center', position: 'relative', zIndex: 10 }}>
+        <div style={isLesson ? { height: '100%' } : { width: '100%', maxWidth: 560, padding: '32px 24px' }}>
           {phase === 'welcome' && <WelcomeScreen />}
           {phase === 'profile' && <ProfileForm />}
           {phase === 'quiz' && <LevelQuiz />}

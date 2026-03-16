@@ -1,0 +1,738 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ALGO — Персональный AI-учитель Python</title>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+:root {
+  --purple: #632895;
+  --purple-dark: #3d1560;
+  --purple-deeper: #2a0e42;
+  --yellow: #ffd84d;
+  --yellow-glow: rgba(255, 216, 77, 0.3);
+  --green: #44d370;
+  --bg: #0a0014;
+  --bg-card: rgba(99, 40, 149, 0.08);
+  --text: #f5f0fa;
+  --text-muted: #a89cb8;
+}
+
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: 'Montserrat', -apple-system, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ─── NAV ─── */
+nav {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+  padding: 0 48px; height: 56px;
+  display: flex; align-items: center; justify-content: space-between;
+  background: rgba(10, 0, 20, 0.72);
+  backdrop-filter: saturate(180%) blur(20px);
+  -webkit-backdrop-filter: saturate(180%) blur(20px);
+  border-bottom: 1px solid rgba(99, 40, 149, 0.15);
+  transition: background 0.3s;
+}
+nav .logo { font-weight: 800; font-size: 18px; letter-spacing: 2px; color: var(--yellow); }
+nav .links { display: flex; gap: 32px; }
+nav .links a {
+  font-size: 13px; font-weight: 500; color: var(--text-muted);
+  text-decoration: none; transition: color 0.2s;
+}
+nav .links a:hover { color: var(--text); }
+
+/* ─── HERO ─── */
+.hero {
+  min-height: 100vh; display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  text-align: center; padding: 120px 24px 80px;
+  position: relative; overflow: hidden;
+}
+.hero::before {
+  content: ''; position: absolute; top: -200px; left: 50%; transform: translateX(-50%);
+  width: 900px; height: 900px; border-radius: 50%;
+  background: radial-gradient(circle, rgba(99,40,149,0.25) 0%, transparent 70%);
+  pointer-events: none;
+}
+.hero-badge {
+  display: inline-flex; align-items: center; gap: 8px;
+  padding: 6px 16px; border-radius: 100px;
+  background: rgba(99, 40, 149, 0.2); border: 1px solid rgba(99, 40, 149, 0.3);
+  font-size: 13px; font-weight: 600; color: var(--yellow);
+  margin-bottom: 32px; opacity: 0; animation: fadeUp 0.8s 0.2s ease forwards;
+}
+.hero-badge .dot { width: 6px; height: 6px; border-radius: 50%; background: var(--green); animation: pulse 2s infinite; }
+
+.hero h1 {
+  font-size: clamp(56px, 8vw, 96px); font-weight: 900;
+  line-height: 1.05; letter-spacing: -2px;
+  background: linear-gradient(135deg, #ffffff 0%, #e0d0f0 50%, var(--yellow) 100%);
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+  background-clip: text;
+  max-width: 800px;
+  opacity: 0; animation: fadeUp 0.8s 0.4s ease forwards;
+}
+
+.hero .subtitle {
+  font-size: clamp(18px, 2.5vw, 22px); font-weight: 500;
+  color: var(--text-muted); max-width: 560px;
+  margin-top: 24px; line-height: 1.6;
+  opacity: 0; animation: fadeUp 0.8s 0.6s ease forwards;
+}
+
+.hero-cta {
+  display: flex; gap: 16px; margin-top: 48px;
+  opacity: 0; animation: fadeUp 0.8s 0.8s ease forwards;
+}
+
+.btn-primary {
+  display: inline-flex; align-items: center; gap: 8px;
+  padding: 16px 36px; border-radius: 100px;
+  background: var(--yellow); color: var(--purple-dark);
+  font-family: inherit; font-size: 16px; font-weight: 700;
+  border: none; cursor: pointer; transition: all 0.3s;
+  box-shadow: 0 0 40px var(--yellow-glow);
+}
+.btn-primary:hover { transform: translateY(-2px); box-shadow: 0 0 60px var(--yellow-glow); }
+
+.btn-ghost {
+  display: inline-flex; align-items: center; gap: 8px;
+  padding: 16px 36px; border-radius: 100px;
+  background: transparent; color: var(--text);
+  font-family: inherit; font-size: 16px; font-weight: 600;
+  border: 1px solid rgba(255,255,255,0.15); cursor: pointer; transition: all 0.3s;
+}
+.btn-ghost:hover { border-color: rgba(255,255,255,0.3); background: rgba(255,255,255,0.05); }
+
+/* ─── DEVICE MOCKUP ─── */
+.device-wrap {
+  margin-top: 80px; width: 100%; max-width: 1000px;
+  opacity: 0; animation: fadeUp 1s 1s ease forwards;
+}
+.device {
+  background: #1a1028; border-radius: 20px;
+  border: 1px solid rgba(99,40,149,0.25);
+  box-shadow: 0 40px 120px rgba(99,40,149,0.2), 0 0 0 1px rgba(255,255,255,0.05);
+  overflow: hidden;
+}
+.device-bar {
+  height: 40px; background: rgba(99,40,149,0.12);
+  display: flex; align-items: center; padding: 0 16px; gap: 8px;
+  border-bottom: 1px solid rgba(99,40,149,0.15);
+}
+.device-dot { width: 12px; height: 12px; border-radius: 50%; }
+.device-dot:nth-child(1) { background: #ff5f57; }
+.device-dot:nth-child(2) { background: #febc2e; }
+.device-dot:nth-child(3) { background: #28c840; }
+.device-url {
+  margin-left: 24px; padding: 4px 16px; border-radius: 6px;
+  background: rgba(255,255,255,0.06); font-size: 12px; color: var(--text-muted);
+  font-family: 'JetBrains Mono', monospace;
+}
+
+.device-content {
+  display: flex; height: 480px;
+}
+.device-left {
+  width: 40%; background: linear-gradient(180deg, var(--purple) 0%, var(--purple-dark) 100%);
+  padding: 32px; display: flex; flex-direction: column; gap: 20px;
+}
+.device-right {
+  width: 60%; display: flex; flex-direction: column;
+}
+.task-label { font-size: 11px; text-transform: uppercase; letter-spacing: 2px; color: rgba(255,255,255,0.5); font-weight: 600; }
+.task-title { font-size: 22px; font-weight: 800; color: white; }
+.task-desc { font-size: 14px; color: rgba(255,255,255,0.75); line-height: 1.7; }
+.task-tags { display: flex; gap: 8px; flex-wrap: wrap; }
+.task-tag {
+  padding: 4px 12px; border-radius: 100px;
+  background: rgba(255,216,77,0.15); color: var(--yellow);
+  font-size: 12px; font-weight: 600;
+}
+
+.code-area {
+  flex: 1; background: #1e1e2e; padding: 24px;
+  font-family: 'JetBrains Mono', monospace; font-size: 14px;
+  color: #cdd6f4; overflow: hidden; position: relative;
+}
+.code-area .line-num { color: #585b70; margin-right: 16px; user-select: none; }
+.code-area .keyword { color: #cba6f7; }
+.code-area .string { color: #a6e3a1; }
+.code-area .func { color: #89b4fa; }
+.code-area .comment { color: #585b70; font-style: italic; }
+.code-cursor {
+  display: inline-block; width: 2px; height: 18px; background: var(--yellow);
+  vertical-align: text-bottom; animation: blink 1s infinite;
+}
+
+.code-buttons {
+  display: flex; gap: 12px; padding: 12px 24px;
+  background: rgba(99,40,149,0.06);
+  border-top: 1px solid rgba(99,40,149,0.1);
+}
+.code-btn {
+  display: flex; align-items: center; gap: 6px;
+  padding: 8px 20px; border-radius: 100px;
+  font-family: inherit; font-size: 13px; font-weight: 600;
+  border: none; cursor: pointer; transition: all 0.2s;
+}
+.code-btn.run { background: var(--purple-dark); color: white; }
+.code-btn.submit { background: var(--yellow); color: var(--purple-dark); }
+
+.output-area {
+  padding: 16px 24px; background: #0f0a1a;
+  font-family: 'JetBrains Mono', monospace; font-size: 13px;
+  border-top: 1px solid rgba(99,40,149,0.1);
+}
+.output-area .prompt { color: var(--green); }
+.output-area .result { color: #cdd6f4; }
+
+/* ─── SECTION ─── */
+section { padding: 120px 24px; }
+.section-label {
+  font-size: 13px; text-transform: uppercase; letter-spacing: 3px;
+  font-weight: 700; color: var(--yellow); text-align: center; margin-bottom: 12px;
+}
+.section-title {
+  font-size: clamp(36px, 5vw, 56px); font-weight: 900;
+  text-align: center; line-height: 1.15; letter-spacing: -1px;
+  max-width: 700px; margin: 0 auto 16px;
+}
+.section-desc {
+  font-size: 18px; color: var(--text-muted); text-align: center;
+  max-width: 560px; margin: 0 auto 64px; line-height: 1.6;
+}
+
+/* ─── FLOW ─── */
+.flow-grid {
+  display: grid; grid-template-columns: repeat(3, 1fr);
+  gap: 24px; max-width: 1100px; margin: 0 auto;
+}
+.flow-card {
+  background: linear-gradient(145deg, rgba(99,40,149,0.12), rgba(99,40,149,0.04));
+  border: 1px solid rgba(99,40,149,0.15);
+  border-radius: 24px; padding: 36px;
+  transition: all 0.4s; position: relative; overflow: hidden;
+}
+.flow-card:hover {
+  transform: translateY(-4px);
+  border-color: rgba(99,40,149,0.3);
+  box-shadow: 0 20px 60px rgba(99,40,149,0.15);
+}
+.flow-card .step-num {
+  font-size: 64px; font-weight: 900; color: rgba(99,40,149,0.15);
+  position: absolute; top: -8px; right: 16px;
+}
+.flow-card .icon {
+  width: 56px; height: 56px; border-radius: 16px;
+  background: linear-gradient(135deg, var(--purple), var(--purple-dark));
+  display: flex; align-items: center; justify-content: center;
+  font-size: 26px; margin-bottom: 20px;
+  box-shadow: 0 8px 24px rgba(99,40,149,0.3);
+}
+.flow-card h3 { font-size: 20px; font-weight: 700; margin-bottom: 8px; }
+.flow-card p { font-size: 14px; color: var(--text-muted); line-height: 1.6; }
+
+/* ─── FEATURES ─── */
+.features-section { background: linear-gradient(180deg, var(--bg) 0%, #0d0019 100%); }
+.feature-row {
+  display: flex; align-items: center; gap: 80px;
+  max-width: 1100px; margin: 0 auto 100px;
+}
+.feature-row:nth-child(even) { flex-direction: row-reverse; }
+.feature-row:last-child { margin-bottom: 0; }
+.feature-text { flex: 1; }
+.feature-text h3 {
+  font-size: 32px; font-weight: 800; margin-bottom: 16px; line-height: 1.2;
+}
+.feature-text p { font-size: 16px; color: var(--text-muted); line-height: 1.7; }
+
+.feature-visual {
+  flex: 1; aspect-ratio: 4/3; border-radius: 24px;
+  background: linear-gradient(145deg, rgba(99,40,149,0.15), rgba(99,40,149,0.05));
+  border: 1px solid rgba(99,40,149,0.2);
+  display: flex; align-items: center; justify-content: center;
+  position: relative; overflow: hidden;
+}
+
+/* AI Chat visual */
+.ai-chat { padding: 32px; width: 100%; }
+.chat-bubble {
+  max-width: 80%; padding: 16px 20px; border-radius: 20px;
+  font-size: 14px; line-height: 1.6; margin-bottom: 12px;
+  animation: fadeUp 0.6s ease forwards;
+}
+.chat-bubble.ai {
+  background: linear-gradient(135deg, var(--purple), var(--purple-dark));
+  border-bottom-left-radius: 4px; color: white;
+  border-left: 3px solid var(--yellow);
+}
+.chat-bubble.student {
+  background: rgba(255,255,255,0.08); border-bottom-right-radius: 4px;
+  margin-left: auto; color: var(--text);
+}
+
+/* Score visual */
+.score-visual { flex-direction: column; gap: 16px; }
+.score-ring {
+  width: 140px; height: 140px; border-radius: 50%;
+  background: conic-gradient(var(--green) 0deg, var(--green) 288deg, rgba(255,255,255,0.08) 288deg);
+  display: flex; align-items: center; justify-content: center;
+  position: relative;
+}
+.score-ring::before {
+  content: ''; position: absolute; inset: 12px; border-radius: 50%;
+  background: var(--bg);
+}
+.score-ring .value {
+  position: relative; z-index: 1;
+  font-size: 42px; font-weight: 900; color: var(--green);
+}
+.score-ring .label {
+  position: relative; z-index: 1;
+  font-size: 11px; color: var(--text-muted); margin-top: -4px;
+}
+.score-items { display: flex; gap: 24px; }
+.score-item { text-align: center; }
+.score-item .num { font-size: 28px; font-weight: 800; }
+.score-item .lbl { font-size: 12px; color: var(--text-muted); margin-top: 2px; }
+
+/* Trajectory visual */
+.traj-visual { padding: 32px; width: 100%; flex-direction: column; align-items: flex-start; }
+.traj-step {
+  display: flex; align-items: center; gap: 16px; padding: 12px 0;
+  width: 100%;
+}
+.traj-dot {
+  width: 36px; height: 36px; border-radius: 50%; flex-shrink: 0;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 14px; font-weight: 700;
+}
+.traj-dot.active { background: var(--yellow); color: var(--purple-dark); }
+.traj-dot.done { background: var(--green); color: white; }
+.traj-dot.locked { background: rgba(255,255,255,0.08); color: var(--text-muted); }
+.traj-info .name { font-size: 14px; font-weight: 600; }
+.traj-info .meta { font-size: 12px; color: var(--text-muted); }
+.traj-line {
+  width: 2px; height: 12px; background: rgba(255,255,255,0.08);
+  margin-left: 17px;
+}
+
+/* ─── TECH ─── */
+.tech-grid {
+  display: grid; grid-template-columns: repeat(4, 1fr);
+  gap: 20px; max-width: 900px; margin: 0 auto;
+}
+.tech-card {
+  text-align: center; padding: 32px 20px; border-radius: 20px;
+  background: rgba(99,40,149,0.06);
+  border: 1px solid rgba(99,40,149,0.12);
+  transition: all 0.3s;
+}
+.tech-card:hover { border-color: rgba(99,40,149,0.25); transform: translateY(-2px); }
+.tech-card .tech-icon { font-size: 36px; margin-bottom: 12px; }
+.tech-card .tech-name { font-size: 14px; font-weight: 700; margin-bottom: 4px; }
+.tech-card .tech-desc { font-size: 12px; color: var(--text-muted); }
+
+/* ─── CTA SECTION ─── */
+.cta-section {
+  text-align: center; padding: 120px 24px;
+  background: radial-gradient(ellipse at center, rgba(99,40,149,0.15) 0%, transparent 70%);
+}
+.cta-section h2 {
+  font-size: clamp(36px, 5vw, 56px); font-weight: 900;
+  margin-bottom: 16px;
+}
+.cta-section p { font-size: 18px; color: var(--text-muted); margin-bottom: 40px; }
+
+/* ─── FOOTER ─── */
+footer {
+  padding: 40px 48px; border-top: 1px solid rgba(99,40,149,0.12);
+  display: flex; justify-content: space-between; align-items: center;
+}
+footer .copy { font-size: 13px; color: var(--text-muted); }
+footer .foot-links { display: flex; gap: 24px; }
+footer .foot-links a { font-size: 13px; color: var(--text-muted); text-decoration: none; }
+footer .foot-links a:hover { color: var(--text); }
+
+/* ─── ANIMATIONS ─── */
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(24px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+@keyframes blink {
+  0%, 50% { opacity: 1; }
+  51%, 100% { opacity: 0; }
+}
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.4; }
+}
+@keyframes float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-12px); }
+}
+
+/* Scroll reveal */
+.reveal {
+  opacity: 0; transform: translateY(32px);
+  transition: opacity 0.7s ease, transform 0.7s ease;
+}
+.reveal.visible { opacity: 1; transform: translateY(0); }
+
+/* ─── RESPONSIVE ─── */
+@media (max-width: 768px) {
+  nav { padding: 0 24px; }
+  nav .links { display: none; }
+  .flow-grid { grid-template-columns: 1fr; }
+  .feature-row, .feature-row:nth-child(even) { flex-direction: column; gap: 40px; }
+  .tech-grid { grid-template-columns: repeat(2, 1fr); }
+  .device-content { flex-direction: column; height: auto; }
+  .device-left, .device-right { width: 100%; }
+  .code-area { min-height: 200px; }
+}
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <div class="logo">ALGO</div>
+  <div class="links">
+    <a href="#flow">Как это работает</a>
+    <a href="#features">Возможности</a>
+    <a href="#tech">Технологии</a>
+    <a href="https://algoai.duckdns.org" target="_blank">Попробовать</a>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-badge">
+    <span class="dot"></span>
+    Proof of Concept для Алгоритмики
+  </div>
+
+  <h1>Будущее обучения Python</h1>
+
+  <p class="subtitle">
+    ALGO — персональный AI-учитель, который адаптируется под каждого ученика.
+    Строит траекторию, генерирует задания, запускает код и даёт мгновенный ревью.
+  </p>
+
+  <div class="hero-cta">
+    <a href="https://algoai.duckdns.org" target="_blank">
+      <button class="btn-primary">Начать бесплатно →</button>
+    </a>
+    <button class="btn-ghost" onclick="document.getElementById('flow').scrollIntoView()">Как это работает</button>
+  </div>
+
+  <!-- Device Mockup -->
+  <div class="device-wrap">
+    <div class="device">
+      <div class="device-bar">
+        <div class="device-dot"></div>
+        <div class="device-dot"></div>
+        <div class="device-dot"></div>
+        <span class="device-url">algoai.duckdns.org</span>
+      </div>
+      <div class="device-content">
+        <div class="device-left">
+          <span class="task-label">Модуль 1 · Задание</span>
+          <span class="task-title">Калькулятор возраста</span>
+          <span class="task-desc">Напиши программу, которая считает, сколько дней ты уже прожил! Используй переменные и арифметику.</span>
+          <div class="task-tags">
+            <span class="task-tag">переменные</span>
+            <span class="task-tag">print()</span>
+            <span class="task-tag">арифметика</span>
+          </div>
+        </div>
+        <div class="device-right">
+          <div class="code-area">
+            <div><span class="line-num">1</span><span class="comment"># Калькулятор возраста</span></div>
+            <div><span class="line-num">2</span><span class="keyword">name</span> = <span class="string">"Алиса"</span></div>
+            <div><span class="line-num">3</span><span class="keyword">age</span> = <span class="string">12</span></div>
+            <div><span class="line-num">4</span><span class="keyword">days</span> = age * <span class="string">365</span></div>
+            <div><span class="line-num">5</span></div>
+            <div><span class="line-num">6</span><span class="func">print</span>(<span class="string">f"Привет, {name}!"</span>)</div>
+            <div><span class="line-num">7</span><span class="func">print</span>(<span class="string">f"Тебе {days} дней!"</span>)<span class="code-cursor"></span></div>
+          </div>
+          <div class="code-buttons">
+            <button class="code-btn run">▶ Запустить</button>
+            <button class="code-btn submit">↗ Сдать на проверку</button>
+          </div>
+          <div class="output-area">
+            <div><span class="prompt">→</span> <span class="result">Привет, Алиса!</span></div>
+            <div><span class="prompt">→</span> <span class="result">Тебе 4380 дней!</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- HOW IT WORKS -->
+<section id="flow">
+  <div class="section-label reveal">Путь ученика</div>
+  <h2 class="section-title reveal">Шесть шагов<br>от нуля до героя</h2>
+  <p class="section-desc reveal">Каждый этап адаптируется под уровень, цель и скорость ученика. AI ведёт от приветствия до сложных проектов.</p>
+
+  <div class="flow-grid">
+    <div class="flow-card reveal">
+      <span class="step-num">01</span>
+      <div class="icon">👋</div>
+      <h3>Приветствие</h3>
+      <p>ALGO знакомится с учеником как старший друг. Генерирует персональное приветствие через AI.</p>
+    </div>
+    <div class="flow-card reveal">
+      <span class="step-num">02</span>
+      <div class="icon">📋</div>
+      <h3>Профиль</h3>
+      <p>Возраст, опыт, цель и доступное время. Всё, что нужно для персональной траектории.</p>
+    </div>
+    <div class="flow-card reveal">
+      <span class="step-num">03</span>
+      <div class="icon">🧪</div>
+      <h3>Тест уровня</h3>
+      <p>5 вопросов от простого к сложному. Автоматическое определение: beginner, intermediate или advanced.</p>
+    </div>
+    <div class="flow-card reveal">
+      <span class="step-num">04</span>
+      <div class="icon">🗺️</div>
+      <h3>AI-траектория</h3>
+      <p>Claude генерирует 5-7 персональных модулей. Адаптация под уровень, цель и доступное время.</p>
+    </div>
+    <div class="flow-card reveal">
+      <span class="step-num">05</span>
+      <div class="icon">💻</div>
+      <h3>Код в браузере</h3>
+      <p>Monaco Editor + Python прямо в браузере через WebAssembly. Запуск кода без сервера.</p>
+    </div>
+    <div class="flow-card reveal">
+      <span class="step-num">06</span>
+      <div class="icon">⭐</div>
+      <h3>AI Code Review</h3>
+      <p>Мгновенная проверка с оценкой, похвалой, советами и адаптивным следующим заданием.</p>
+    </div>
+  </div>
+</section>
+
+<!-- FEATURES -->
+<section id="features" class="features-section">
+  <div class="section-label reveal">Возможности</div>
+  <h2 class="section-title reveal">Всё, что нужно<br>для обучения</h2>
+  <p class="section-desc reveal">Персональный подход в каждой детали. AI понимает ученика и подстраивается в реальном времени.</p>
+
+  <!-- Feature 1: AI Chat -->
+  <div class="feature-row reveal">
+    <div class="feature-text">
+      <h3>AI, который говорит<br>на языке ученика</h3>
+      <p>ALGO общается как старший друг, не как учитель. Объясняет сложное просто, даёт обратную связь с эмпатией и адаптирует тон под возраст — от 10 до 17 лет.</p>
+    </div>
+    <div class="feature-visual">
+      <div class="ai-chat">
+        <div class="chat-bubble ai">Отлично, Алиса! Ты использовала f-строки — это продвинутый приём. Попробуй добавить условие: если дней больше 5000, выведи «Ого, серьёзный стаж!» 😎</div>
+        <div class="chat-bubble student">А как написать условие?</div>
+        <div class="chat-bubble ai">Легко! Используй if-else. Вот подсказка: <code>if days > 5000:</code> — и дальше print с текстом. Попробуй сама!</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Feature 2: Adaptive trajectory -->
+  <div class="feature-row reveal">
+    <div class="feature-text">
+      <h3>Траектория,<br>которая подстраивается</h3>
+      <p>Каждый модуль учитывает цель ученика: создать игру, подготовиться к экзамену или изучить ML. Если задание оказалось слишком сложным — следующее будет проще. Набрал 10/10 — получи challenge.</p>
+    </div>
+    <div class="feature-visual traj-visual">
+      <div class="traj-step">
+        <div class="traj-dot done">✓</div>
+        <div class="traj-info">
+          <div class="name">Переменные и типы данных</div>
+          <div class="meta">4 задания · завершён</div>
+        </div>
+      </div>
+      <div class="traj-line"></div>
+      <div class="traj-step">
+        <div class="traj-dot active">2</div>
+        <div class="traj-info">
+          <div class="name">Условия и логика</div>
+          <div class="meta">В процессе · задание 2 из 5</div>
+        </div>
+      </div>
+      <div class="traj-line"></div>
+      <div class="traj-step">
+        <div class="traj-dot locked">3</div>
+        <div class="traj-info">
+          <div class="name">Циклы и итерация</div>
+          <div class="meta">Откроется следующим</div>
+        </div>
+      </div>
+      <div class="traj-line"></div>
+      <div class="traj-step">
+        <div class="traj-dot locked">4</div>
+        <div class="traj-info">
+          <div class="name">Функции</div>
+          <div class="meta">Скоро</div>
+        </div>
+      </div>
+      <div class="traj-line"></div>
+      <div class="traj-step">
+        <div class="traj-dot locked">5</div>
+        <div class="traj-info">
+          <div class="name">Мини-проект: Игра</div>
+          <div class="meta">Финальный модуль</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Feature 3: Code Review -->
+  <div class="feature-row reveal">
+    <div class="feature-text">
+      <h3>Мгновенный<br>code review</h3>
+      <p>Сдал код — получил оценку за секунды. Что получилось, что улучшить, исправленная версия. Каждый ревью — это урок, а не просто «правильно/неправильно».</p>
+    </div>
+    <div class="feature-visual score-visual">
+      <div class="score-ring">
+        <div style="display:flex;flex-direction:column;align-items:center;">
+          <span class="value">8</span>
+          <span class="label">из 10</span>
+        </div>
+      </div>
+      <div class="score-items">
+        <div class="score-item">
+          <div class="num" style="color:var(--green);">3</div>
+          <div class="lbl">Что круто</div>
+        </div>
+        <div class="score-item">
+          <div class="num" style="color:var(--yellow);">1</div>
+          <div class="lbl">Улучшить</div>
+        </div>
+        <div class="score-item">
+          <div class="num" style="color:#89b4fa;">→</div>
+          <div class="lbl">Сложнее</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- TECH STACK -->
+<section id="tech">
+  <div class="section-label reveal">Технологии</div>
+  <h2 class="section-title reveal">Под капотом</h2>
+  <p class="section-desc reveal">Современный стек для мгновенного отклика и безопасного выполнения кода.</p>
+
+  <div class="tech-grid">
+    <div class="tech-card reveal">
+      <div class="tech-icon">⚛️</div>
+      <div class="tech-name">React 19</div>
+      <div class="tech-desc">TypeScript + Vite + Zustand</div>
+    </div>
+    <div class="tech-card reveal">
+      <div class="tech-icon">🐍</div>
+      <div class="tech-name">Pyodide</div>
+      <div class="tech-desc">Python в браузере через WASM</div>
+    </div>
+    <div class="tech-card reveal">
+      <div class="tech-icon">🧠</div>
+      <div class="tech-name">Claude AI</div>
+      <div class="tech-desc">5 точек AI-генерации</div>
+    </div>
+    <div class="tech-card reveal">
+      <div class="tech-icon">✏️</div>
+      <div class="tech-name">Monaco Editor</div>
+      <div class="tech-desc">VS Code опыт в браузере</div>
+    </div>
+    <div class="tech-card reveal">
+      <div class="tech-icon">🎨</div>
+      <div class="tech-name">Tailwind CSS</div>
+      <div class="tech-desc">Дизайн-система Алгоритмики</div>
+    </div>
+    <div class="tech-card reveal">
+      <div class="tech-icon">🚀</div>
+      <div class="tech-name">Express 5</div>
+      <div class="tech-desc">Node.js бэкенд + proxy</div>
+    </div>
+    <div class="tech-card reveal">
+      <div class="tech-icon">🔒</div>
+      <div class="tech-name">Let's Encrypt</div>
+      <div class="tech-desc">HTTPS + auto-renew</div>
+    </div>
+    <div class="tech-card reveal">
+      <div class="tech-icon">🖥️</div>
+      <div class="tech-name">Hetzner VPS</div>
+      <div class="tech-desc">systemd + nginx</div>
+    </div>
+  </div>
+</section>
+
+<!-- STATS -->
+<section style="padding:80px 24px;">
+  <div style="display:flex;justify-content:center;gap:80px;flex-wrap:wrap;" class="reveal">
+    <div style="text-align:center;">
+      <div style="font-size:56px;font-weight:900;background:linear-gradient(135deg,var(--yellow),var(--green));-webkit-background-clip:text;-webkit-text-fill-color:transparent;">6</div>
+      <div style="font-size:14px;color:var(--text-muted);margin-top:4px;">AI-адаптивных экранов</div>
+    </div>
+    <div style="text-align:center;">
+      <div style="font-size:56px;font-weight:900;background:linear-gradient(135deg,var(--yellow),var(--green));-webkit-background-clip:text;-webkit-text-fill-color:transparent;">5</div>
+      <div style="font-size:14px;color:var(--text-muted);margin-top:4px;">Точек AI-генерации</div>
+    </div>
+    <div style="text-align:center;">
+      <div style="font-size:56px;font-weight:900;background:linear-gradient(135deg,var(--yellow),var(--green));-webkit-background-clip:text;-webkit-text-fill-color:transparent;">10–17</div>
+      <div style="font-size:14px;color:var(--text-muted);margin-top:4px;">Лет — целевая аудитория</div>
+    </div>
+    <div style="text-align:center;">
+      <div style="font-size:56px;font-weight:900;background:linear-gradient(135deg,var(--yellow),var(--green));-webkit-background-clip:text;-webkit-text-fill-color:transparent;">0</div>
+      <div style="font-size:14px;color:var(--text-muted);margin-top:4px;">Серверных зависимостей для Python</div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<section class="cta-section">
+  <h2 class="reveal">Готовы попробовать?</h2>
+  <p class="reveal">Запустите ALGO и убедитесь сами — AI-обучение работает.</p>
+  <div class="reveal">
+    <a href="https://algoai.duckdns.org" target="_blank">
+      <button class="btn-primary" style="font-size:18px;padding:20px 48px;">
+        Запустить ALGO →
+      </button>
+    </a>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <span class="copy">ALGO · Codos × Алгоритмика · 2026</span>
+  <div class="foot-links">
+    <a href="https://algoai.duckdns.org" target="_blank">Демо</a>
+    <a href="#">Документация</a>
+    <a href="#">Контакт</a>
+  </div>
+</footer>
+
+<script>
+// Scroll reveal
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(e => {
+    if (e.isIntersecting) {
+      e.target.classList.add('visible');
+    }
+  });
+}, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
+
+document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+</script>
+</body>
+</html>

@@ -1,4 +1,4 @@
-import type { ButtonHTMLAttributes, ReactNode } from 'react';
+import type { ButtonHTMLAttributes, ReactNode, CSSProperties } from 'react';
 
 interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   variant?: 'primary' | 'secondary' | 'dark' | 'ghost';
@@ -6,24 +6,29 @@ interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   children: ReactNode;
 }
 
-export function Button({ variant = 'primary', size = 'md', children, className = '', ...props }: ButtonProps) {
-  const base = 'font-bold rounded-full transition-all duration-200 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed inline-flex items-center justify-center gap-2';
+const base: CSSProperties = {
+  fontFamily: 'inherit', fontWeight: 700, borderRadius: 100,
+  cursor: 'pointer', border: 'none',
+  display: 'inline-flex', alignItems: 'center', justifyContent: 'center', gap: 8,
+  transition: 'all 0.3s',
+};
 
-  const variants = {
-    primary: 'bg-[#ffd84d] text-[#3d1560] hover:bg-[#ffc800] hover:shadow-[0_8px_24px_rgba(255,216,77,0.4)] hover:-translate-y-0.5 active:translate-y-0',
-    secondary: 'bg-white/20 text-white border-2 border-white/40 hover:bg-white/30 backdrop-blur-sm',
-    dark: 'bg-[#632895] text-white hover:bg-[#4a1a70]',
-    ghost: 'bg-transparent text-[#6B7280] hover:text-[#0f1c2c] hover:bg-gray-100 rounded-xl',
-  };
+const variants: Record<string, CSSProperties> = {
+  primary: { background: 'var(--yellow)', color: 'var(--purple-dark)', boxShadow: '0 0 40px var(--yellow-glow)' },
+  secondary: { background: 'transparent', color: 'var(--text)', border: '1px solid rgba(255,255,255,0.15)' },
+  dark: { background: 'var(--purple-dark)', color: 'white' },
+  ghost: { background: 'transparent', color: 'var(--text-muted)' },
+};
 
-  const sizes = {
-    sm: 'px-6 py-3 text-sm',
-    md: 'px-8 py-4 text-base',
-    lg: 'px-10 py-5 text-lg',
-  };
+const sizes: Record<string, CSSProperties> = {
+  sm: { padding: '10px 24px', fontSize: 13 },
+  md: { padding: '14px 32px', fontSize: 15 },
+  lg: { padding: '18px 40px', fontSize: 17 },
+};
 
+export function Button({ variant = 'primary', size = 'md', children, style, ...props }: ButtonProps) {
   return (
-    <button className={`${base} ${variants[variant]} ${sizes[size]} ${className}`} {...props}>
+    <button style={{ ...base, ...variants[variant], ...sizes[size], ...style, ...(props.disabled ? { opacity: 0.4, cursor: 'not-allowed' } : {}) }} {...props}>
       {children}
     </button>
   );

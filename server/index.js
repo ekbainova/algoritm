@@ -13,7 +13,12 @@ app.use(express.json());
 
 app.use('/api/claude', claudeRouter);
 
-// Serve static files in production
+// Landing page at root
+app.get('/', (req, res) => {
+  res.sendFile(path.join(__dirname, '../client/dist/landing.html'));
+});
+
+// React app at /app
 app.use(express.static(path.join(__dirname, '../client/dist')));
 app.get('/{*path}', (req, res) => {
   res.sendFile(path.join(__dirname, '../client/dist/index.html'));
